@@ -5,7 +5,10 @@
 // and connect at the socket path in "lib/my_app/endpoint.ex":
 import {Socket} from "phoenix"
 
-let socket = new Socket("/socket", {params: {token: window.userToken}})
+var token = $('meta[name=channel_token]').attr('content');
+window.playerId = token;
+var socket = new Socket('/socket', {params: {token: token}});
+// let socket = new Socket("/socket", {params: {token: 66}})
 
 // When you connect, you'll often need to authenticate the client.
 // For example, imagine you have an authentication plug, `MyAuth`,
@@ -54,9 +57,28 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 socket.connect()
 
 // Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("topic:subtopic", {})
-channel.join()
-  .receive("ok", resp => { console.log("Joined successfully", resp) })
-  .receive("error", resp => { console.log("Unable to join", resp) })
+// let channel = socket.channel("topic:subtopic", {})
+// channel.join()
+//   .receive("ok", resp => { console.log("Joined successfully", resp) })
+//   .receive("error", resp => { console.log("Unable to join", resp) })
+
+var lobby = socket.channel('game:lobby');
+window.serverState = {};
+lobby.join().receive('ok', function(res) {
+  console.log('Connected to game server!');
+});
+
+lobby.on('player_joined', function(response) {
+  window.serverState = response.state;
+  console.log('Player was added. State: ', response.state);
+});
+
+lobby.on('player_moved', function(response) {
+  window.serverState = response.state;
+});
+
+window.movePlayer = function(x, y) {
+  lobby.push('player_moved', {x: x, y: y});
+};
 
 export default socket

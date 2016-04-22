@@ -13,6 +13,7 @@ defmodule Slaughterhouse do
       supervisor(Slaughterhouse.Repo, []),
       # Here you could define other workers and supervisors as children
       # worker(Slaughterhouse.Worker, [arg1, arg2, arg3]),
+      worker(Slaughterhouse.ChannelMonitor, [%{}])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

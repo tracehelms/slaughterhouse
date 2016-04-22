@@ -3,6 +3,7 @@ defmodule Slaughterhouse.UserSocket do
 
   ## Channels
   # channel "rooms:*", Slaughterhouse.RoomChannel
+  channel "game:lobby", Slaughterhouse.LobbyChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
@@ -19,7 +20,8 @@ defmodule Slaughterhouse.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(_params, socket) do
+  def connect(%{"token" => token}, socket) do
+    socket = assign(socket, :user_id, token)
     {:ok, socket}
   end
 
