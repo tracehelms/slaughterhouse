@@ -13,6 +13,10 @@ defmodule Slaughterhouse.ChannelMonitor do
    GenServer.call(__MODULE__, {:move_player, user_id, location})
   end
 
+  def player_left(user_id) do
+    GenServer.call(__MODULE__, {:player_left, user_id})
+  end
+
   # def user_left(channel, user_id) do
   #   GenServer.call(__MODULE__, {:user_left, channel, user_id})
   # end
@@ -40,13 +44,8 @@ defmodule Slaughterhouse.ChannelMonitor do
     {:reply, new_state, new_state}
   end
 
-  # def handle_call({:user_left, channel, user_id}, _from, state) do
-  #   new_users = state
-  #     |> Map.get(channel)
-  #     |> Enum.reject(&(&1.id == user_id))
-  #
-  #   new_state = Map.update!(state, channel, fn(_) -> new_users end)
-  #
-  #   {:reply, new_state, new_state}
-  # end
+  def handle_call({:player_left, user_id}, _from, state) do
+    new_state = Map.delete(state, user_id)
+    {:reply, new_state, new_state}
+  end
 end

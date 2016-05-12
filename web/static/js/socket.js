@@ -73,6 +73,10 @@ lobby.on('player_joined', function(response) {
   console.log('Player was added. State: ', response.state);
 });
 
+lobby.on('player_left', function(response) {
+  console.log('Player left. New state: ', response.state);
+});
+
 lobby.on('player_moved', function(response) {
   window.serverState = response.state;
 });

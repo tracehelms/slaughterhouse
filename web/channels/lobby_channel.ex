@@ -9,6 +9,14 @@ defmodule Slaughterhouse.LobbyChannel do
     {:ok, socket}
   end
 
+  def terminate(_reason, socket) do
+    IO.puts "user leaving"
+    user_id = socket.assigns.user_id
+    state = ChannelMonitor.player_left(user_id)
+    broadcast! socket, "player_left", %{state: state}
+    :ok
+  end
+
   def handle_info({:after_join, state}, socket) do
     broadcast! socket, "player_joined", %{state: state}
     {:noreply, socket}

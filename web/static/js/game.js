@@ -95,8 +95,10 @@ function updateRemotePlayerPositions() {
   addNewPlayers();
   _.each(players, function(playerObj, playerId) {
     if (playerId !== window.playerId) {
-      playerObj.x = window.serverState[playerId].x;
-      playerObj.y = window.serverState[playerId].y;
+      if (window.serverState && window.serverState[playerId]) {
+        playerObj.x = window.serverState[playerId].x;
+        playerObj.y = window.serverState[playerId].y;
+      }
     }
   });
 }
@@ -106,6 +108,7 @@ function addNewPlayers() {
     if (!_.includes(Object.keys(players), playerId)) {
       players[playerId] = addPlayer();
     }
+    // TODO need to remove players that are in players but not in window.serverState anymore
   });
 }
 
